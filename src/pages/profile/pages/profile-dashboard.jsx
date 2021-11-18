@@ -10,7 +10,8 @@ import {
     TableRow,
     Typography,
     TableCell,
-    TableBody
+    TableBody,
+    IconButton
 } from '@mui/material';
 import { makeStyles, withStyles } from '@mui/styles';
 import Pagination from '@mui/material/Pagination';
@@ -18,6 +19,8 @@ import Stack from '@mui/material/Stack';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import { Box } from '@mui/system';
+import { ButtonTab, ModalReview } from '../component';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -38,7 +41,15 @@ const useStyles = makeStyles((theme) => ({
     },
     icon: {
         width: '19px',
-        height: '19px%'
+        height: '19px'
+    },
+    btnIcon: {
+        '&.MuiIconButton-root': {
+            borderRadius: '0'
+        },
+        '&.MuiIconButton-root:hover': {
+            background: 'none'
+        }
     }
 }));
 
@@ -161,6 +172,7 @@ const rows = [
 const Dashboard = () => {
     const classes = useStyles();
     const [pages, setPages] = useState('');
+    const [showModalReview, setShowModalReview] = useState(false);
     const router = useRouter();
 
     const handleClick = (e) => {
@@ -173,16 +185,19 @@ const Dashboard = () => {
                 <title>Tokyo Foam || Dashboard Profile</title>
             </Head>
             <Container>
-                <Grid className={classes.container} sx={{ mx: 'auto' }}>
+                <ButtonTab active="Dashboard" />
+                <Box className={classes.container} sx={{ mx: 'auto' }}>
                     <div
                         style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '62px' }}
                     >
                         <Typography> Hello, Mia Artina</Typography>
                         <Typography mt={'22px'}>mia.artina@gmail.com</Typography>
                         <Typography mt={'22px'} color="#FF7373">
-                            Click to Ubah Password a
+                            Click to Ubah Password
                         </Typography>
                     </div>
+                </Box>
+                <Box className={classes.container} sx={{ mx: 'auto' }} style={{ marginTop: 20 }}>
                     <TableContainer>
                         <Table sx={{ minWidth: 700 }}>
                             <TableHead>
@@ -193,6 +208,7 @@ const Dashboard = () => {
                                     <StylingTableCell>Qty</StylingTableCell>
                                     <StylingTableCell>Status pesanan</StylingTableCell>
                                     <StylingTableCell>Jumlah</StylingTableCell>
+                                    <StylingTableCell></StylingTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -207,30 +223,38 @@ const Dashboard = () => {
                                         <StylingTableCell>{row.status}</StylingTableCell>
                                         <StylingTableCell>IDR {row.price}</StylingTableCell>
                                         <StylingTableCell>
-                                            <CreditCardOutlinedIcon
-                                                style={{ color: '#D8D8D8' }}
-                                                onClick={(e) => {
-                                                    handleClick(e);
-                                                    setPages('/profile/pages/profile-dashboard-payment');
-                                                }}
-                                            />
-                                        </StylingTableCell>
-                                        <StylingTableCell>
-                                            <VisibilityOutlinedIcon
-                                                onClick={(e) => {
-                                                    handleClick(e);
-                                                    setPages('/profile/pages/profile-dashboard-details-order');
-                                                }}
-                                            />
-                                        </StylingTableCell>
-                                        <StylingTableCell>
-                                            <ChatOutlinedIcon
-                                                style={{ color: '#D8D8D8' }}
-                                                onClick={(e) => {
-                                                    handleClick(e);
-                                                    setPages('/profile/pages/profile-dashboard-review');
-                                                }}
-                                            />
+                                            <IconButton aria-label="credit-card" className={classes.btnIcon}>
+                                                <CreditCardOutlinedIcon
+                                                    style={{ color: '#D8D8D8', marginRight: '10px' }}
+                                                    onClick={(e) => {
+                                                        handleClick(e);
+                                                        setPages('/profile/pages/profile-dashboard-payment');
+                                                    }}
+                                                />
+                                            </IconButton>
+
+                                            <IconButton aria-label="view" className={classes.btnIcon}>
+                                                <VisibilityOutlinedIcon
+                                                    onClick={(e) => {
+                                                        handleClick(e);
+                                                        setPages('/profile/pages/profile-dashboard-details-order');
+                                                    }}
+                                                />
+                                            </IconButton>
+
+                                            <IconButton
+                                                aria-label="message"
+                                                className={classes.btnIcon}
+                                                onClick={() => setShowModalReview(true)}
+                                            >
+                                                <ChatOutlinedIcon
+                                                    style={{ color: '#D8D8D8', marginLeft: '10px' }}
+                                                    // onClick={(e) => {
+                                                    //     handleClick(e);
+                                                    //     setPages('/profile/pages/profile-dashboard-review');
+                                                    // }}
+                                                />
+                                            </IconButton>
                                         </StylingTableCell>
                                     </StylingTableRow>
                                 ))}
@@ -241,7 +265,9 @@ const Dashboard = () => {
                         </Stack>
                         `
                     </TableContainer>
-                </Grid>
+                </Box>
+
+                {showModalReview && <ModalReview open={showModalReview} onClose={() => setShowModalReview(false)} />}
             </Container>
         </article>
     );
